@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import { categoryRequestAsync, changeCategory } from '../../store/category/categorySlice';
 import { useEffect } from 'react';
+
+
 export const Navigation = () => {
 
    const { category, activeCategory } = useSelector((state) => state.category);

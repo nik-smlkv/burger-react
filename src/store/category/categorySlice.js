@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+import { API_URI, POSTFIX } from "../../const";
 
 const initialState = {
    category: [
@@ -29,7 +29,7 @@ const categorySlice = createSlice({
    initialState,
    reducers: {
       changeCategory(state, action) {
-         state.activeCategory = action.payload.indexCategory
+         state.activeCategory = action.payload.indexCategory;
       }
    },
    extraReducers: {
