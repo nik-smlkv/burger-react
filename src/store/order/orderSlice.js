@@ -62,13 +62,13 @@ const orderSlice = createSlice({
             productOrderList.count -= 1;
 
             const productOrderGoods = state.orderGoods.find(
-               item => item.id === action, payload.id,
+               item => item.id === action.payload.id,
             );
 
             productOrderGoods.count = productOrderList.count;
             [state.totalCount, state.totalPrice] = calcTotal(state.orderGoods);
          } else {
-            state.orderList = state.orderList.filter(item => item.id !== action, payload.id,);
+            state.orderList = state.orderList.filter(item => item.id !== action.payload.id,);
          }
       }
    },

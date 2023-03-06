@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { openModal } from '../../store/modalDelivery/modalDeliverySlice';
 import { orderRequestAsync } from '../../store/order/orderSlice';
 import { OrderGoods } from '../OrderGoods/OrderGoods';
 import style from './Order.module.css';
 
 
 export const Order = () => {
-   const {totalPrice, totalCount, orderList, orderGoods} = useSelector(state => state.order);
+   const { totalPrice, totalCount, orderList, orderGoods } = useSelector(state => state.order);
    const dispatch = useDispatch();
 
    useEffect(() => {
@@ -30,7 +31,9 @@ export const Order = () => {
                   <span className={style.currency}>&nbsp;₽</span>
                </p>
             </div>
-            <button className={style.order__submit}>Оформить заказ</button>
+            <button className={style.order__submit}
+               disabled={orderGoods.length === 0}
+               onClick={() => { dispatch(openModal()) }}>Оформить заказ</button>
             <div className={style.order__apeal}>
                <p className={style.order__text}>Бесплатная доставка</p>
                <button className={style.order__close}>Свернуть</button>
