@@ -22,14 +22,17 @@ export const localStorageMiddleWare = store => next => action => {
 
 export const orderRequestAsync = createAsyncThunk(
    'order/fetch',
-   (_, { getState }) => {
+   async (_, { getState }) => {
       const listId = getState().order.orderList.map(item => item.id);
 
-      return fetch(`${API_URI}${POSTFIX}?list=${listId}`)
-         .then(req => req.json())
-         .catch(error => ({ error }))
-   }
-)
+      try {
+         const req = await fetch(`${API_URI}${POSTFIX}?list=${listId}`);
+         return await req.json();
+      } catch (error) {
+         return ({ error });
+      }
+   },
+);
 
 const orderSlice = createSlice({
    name: 'order',
@@ -43,7 +46,7 @@ const orderSlice = createSlice({
             productOrderList.count += 1;
 
             const productOrderGoods = state.orderGoods.find(
-               item => item.id === action,payload.id,
+               item => item.id === action, payload.id,
             );
 
             productOrderGoods.count = productOrderList.count;
@@ -52,8 +55,8 @@ const orderSlice = createSlice({
             state.orderList.push({ ...action.payload, count: 1 });
          }
       },
-      removeProduct: (state,action) => {
-         
+      removeProduct: (state, action) => {
+
 
          const productOrderList = state.orderList
             .find(item => item.id === action.payload.id,
@@ -70,6 +73,10 @@ const orderSlice = createSlice({
          } else {
             state.orderList = state.orderList.filter(item => item.id !== action.payload.id,);
          }
+      },
+      clearOrder: (state) =>{
+         state.orderList = [];
+         state.orderGoods = [];
       }
    },
    extraReducers: builder => {
@@ -77,10 +84,10 @@ const orderSlice = createSlice({
          .addCase(orderRequestAsync.pending, (state) => {
             state.error = '';
          })
-         .addCase(orderRequestAsync.fulfilled, (state,action) => {
+         .addCase(orderRequestAsync.fulfilled, (state, action) => {
             const orderGoods = state.orderList.map(item => {
                const product = action.payload
-               .find(product => product.id === item.id);
+                  .find(product => product.id === item.id);
 
                product.count = item.count;
 
@@ -97,5 +104,5 @@ const orderSlice = createSlice({
    }
 });
 
-export const { addProduct, removeProduct } = orderSlice.actions;
+export const { addProduct, removeProduct, clearOrder } = orderSlice.actions;
 export default orderSlice.reducer;
